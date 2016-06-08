@@ -17,6 +17,7 @@
 package cn.finalteam.galleryfinal.adapter;
 
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -60,7 +61,7 @@ public class PhotoEditListAdapter extends ViewHolderAdapter<PhotoEditListAdapter
         }
         holder.mIvPhoto.setImageResource(R.drawable.ic_gf_default_photo);
         holder.mIvDelete.setImageResource(GalleryFinal.getGalleryTheme().getIconDelete());
-        Drawable defaultDrawable = mActivity.getResources().getDrawable(R.drawable.ic_gf_default_photo);
+        Drawable defaultDrawable = ContextCompat.getDrawable(mActivity,R.drawable.ic_gf_default_photo);
         GalleryFinal.getCoreConfig().getImageLoader().displayImage(mActivity, path, holder.mIvPhoto, defaultDrawable, 100, 100);
         if (!GalleryFinal.getFunctionConfig().isMutiSelect()) {
             holder.mIvDelete.setVisibility(View.GONE);

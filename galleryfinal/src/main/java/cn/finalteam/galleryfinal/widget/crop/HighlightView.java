@@ -28,6 +28,8 @@ import android.graphics.Region;
 import android.os.Build;
 import android.view.View;
 
+import cn.finalteam.galleryfinal.R;
+
 /*
  * Modified from version in AOSP.
  *
@@ -80,6 +82,7 @@ class HighlightView {
     }
 
     private void initStyles(int highlightColor) {
+        //todo 需要修正
         this.showThirds = true;
         this.showCircle = false;
         this.handleMode = HandleMode.Always;
@@ -89,7 +92,7 @@ class HighlightView {
         //TypedArray attributes = context.obtainStyledAttributes(outValue.resourceId, R.styleable.CropImageView);
         //try {
             //showThirds = attributes.getBoolean(R.styleable.CropImageView_showThirds, false);
-            //showCircle = attributes.getBoolean(R.styleable.CropImageView_showCircle, false);
+        //showCircle = attributes.getBoolean(R.styleable.CropImageView_showCircle, false);
             //highlightColor = attributes.getColor(R.styleable.CropImageView_highlightColor,
             //        DEFAULT_HIGHLIGHT_COLOR);
             //handleMode = HandleMode.values()[attributes.getInt(R.styleable.CropImageView_showHandles, 0)];
@@ -137,15 +140,19 @@ class HighlightView {
             viewContext.getDrawingRect(viewDrawingRect);
 
             path.addRect(new RectF(drawRect), Path.Direction.CW);
+            //todo 需要修正
+//            path.addCircle((drawRect.right+drawRect.left)/2,(drawRect.bottom+drawRect.top)/2,(drawRect.bottom-drawRect.top)/2,Path.Direction.CW);
             outlinePaint.setColor(highlightColor);
 
             if (isClipPathSupported(canvas)) {
+                //模糊区域绘制
                 canvas.clipPath(path, Region.Op.DIFFERENCE);
                 canvas.drawRect(viewDrawingRect, outsidePaint);
             } else {
                 drawOutsideFallback(canvas);
             }
 
+            //画四个边栏
             canvas.restore();
             canvas.drawPath(path, outlinePaint);
 
@@ -195,6 +202,7 @@ class HighlightView {
         int xMiddle = drawRect.left + ((drawRect.right  - drawRect.left) / 2);
         int yMiddle = drawRect.top + ((drawRect.bottom - drawRect.top) / 2);
 
+        //四个控制点
         canvas.drawCircle(drawRect.left, yMiddle, handleRadius, handlePaint);
         canvas.drawCircle(xMiddle, drawRect.top, handleRadius, handlePaint);
         canvas.drawCircle(drawRect.right, yMiddle, handleRadius, handlePaint);
@@ -217,7 +225,7 @@ class HighlightView {
     }
 
     private void drawCircle(Canvas canvas) {
-        outlinePaint.setStrokeWidth(1);
+        outlinePaint.setStrokeWidth(5);
         canvas.drawOval(new RectF(drawRect), outlinePaint);
     }
 

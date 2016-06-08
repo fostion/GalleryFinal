@@ -20,6 +20,7 @@ import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -222,10 +223,13 @@ public abstract class CropImageActivity extends MonitoredActivity {
                 return;
             }
 
+            //TODO 绘制图片
+            //获取主题颜色设置截取框的颜色
             HighlightView hv = new HighlightView(imageView, GalleryFinal.getGalleryTheme().getCropControlColor());
             final int width = rotateBitmap.getWidth();
             final int height = rotateBitmap.getHeight();
 
+            //截取框的大小
             Rect imageRect = new Rect(0, 0, width, height);
 
             // Make the default size about 4/5 of the width or height

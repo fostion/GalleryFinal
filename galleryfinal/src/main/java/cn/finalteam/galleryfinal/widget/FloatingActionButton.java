@@ -35,6 +35,7 @@ import android.os.Build.VERSION_CODES;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -190,7 +191,7 @@ public class FloatingActionButton extends ImageButton {
 
     Drawable getIconDrawable() {
         if (mIcon != 0) {
-            return getResources().getDrawable(mIcon);
+            return ContextCompat.getDrawable(getContext(),mIcon);
         } else {
             return new ColorDrawable(Color.TRANSPARENT);
         }

@@ -18,6 +18,7 @@ package cn.finalteam.galleryfinal.adapter;
 
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -69,7 +70,7 @@ public class PhotoListAdapter extends ViewHolderAdapter<PhotoListAdapter.PhotoVi
         }
 
         holder.mIvThumb.setImageResource(R.drawable.ic_gf_default_photo);
-        Drawable defaultDrawable = mActivity.getResources().getDrawable(R.drawable.ic_gf_default_photo);
+        Drawable defaultDrawable = ContextCompat.getDrawable(mActivity,R.drawable.ic_gf_default_photo);
         GalleryFinal.getCoreConfig().getImageLoader().displayImage(mActivity, path, holder.mIvThumb, defaultDrawable, mRowWidth, mRowWidth);
         holder.mView.setAnimation(null);
         if (GalleryFinal.getCoreConfig().getAnimation() > 0) {
