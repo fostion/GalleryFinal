@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Toast;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import cn.finalteam.galleryfinal.CoreConfig;
@@ -35,6 +36,7 @@ import cn.finalteam.galleryfinal.sample.loader.UILImageLoader;
 import cn.finalteam.galleryfinal.sample.loader.XUtils2ImageLoader;
 import cn.finalteam.galleryfinal.sample.loader.XUtilsImageLoader;
 import cn.finalteam.galleryfinal.widget.HorizontalListView;
+
 import com.baoyz.actionsheet.ActionSheet;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
@@ -42,9 +44,11 @@ import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.xutils.x;
 
 public class MainActivity extends AppCompatActivity {
@@ -126,6 +130,8 @@ public class MainActivity extends AppCompatActivity {
     CheckBox mCbPreview;
     @Bind(R.id.cb_no_animation)
     CheckBox mCbNoAnimation;
+    @Bind(R.id.isPreviewAvatar)
+    CheckBox isPreviewAvatar;
 
     private List<PhotoInfo> mPhotoList;
     private ChoosePhotoListAdapter mChoosePhotoListAdapter;
@@ -241,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
                     themeConfig = theme;
                 }
 
-                FunctionConfig.Builder functionConfigBuilder = new FunctionConfig.Builder();
+                final FunctionConfig.Builder functionConfigBuilder = new FunctionConfig.Builder();
                 cn.finalteam.galleryfinal.ImageLoader imageLoader;
                 PauseOnScrollListener pauseOnScrollListener = null;
                 if (mRbUil.isChecked()) {
@@ -285,6 +291,8 @@ public class MainActivity extends AppCompatActivity {
                         functionConfigBuilder.setRotateReplaceSource(true);
                     }
                 }
+
+                functionConfigBuilder.setCropCircle(isPreviewAvatar.isChecked());
 
                 if (mCbCrop.isChecked()) {
                     functionConfigBuilder.setEnableCrop(true);

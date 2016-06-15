@@ -20,7 +20,6 @@ import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -31,10 +30,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
+
 import cn.finalteam.galleryfinal.GalleryFinal;
 import cn.finalteam.galleryfinal.R;
 import cn.finalteam.galleryfinal.utils.ILogger;
-import cn.finalteam.toolsfinal.io.FileUtils;
 import cn.finalteam.toolsfinal.io.FilenameUtils;
 
 import java.io.File;
@@ -106,7 +105,7 @@ public abstract class CropImageActivity extends MonitoredActivity {
     }
 
     public void setSourceUri(Uri sourceUri) {
-        if(rotateBitmap != null) {
+        if (rotateBitmap != null) {
             rotateBitmap.recycle();
             rotateBitmap = null;
         }
@@ -211,7 +210,7 @@ public abstract class CropImageActivity extends MonitoredActivity {
 
     public void setCropEnabled(boolean enabled) {
         this.cropEnabled = enabled;
-        if ( enabled ) {
+        if (enabled) {
             startCrop();
         }
     }
@@ -225,7 +224,7 @@ public abstract class CropImageActivity extends MonitoredActivity {
 
             //TODO 绘制图片
             //获取主题颜色设置截取框的颜色
-            HighlightView hv = new HighlightView(imageView, GalleryFinal.getGalleryTheme().getCropControlColor());
+            HighlightView hv = new HighlightView(imageView, GalleryFinal.getGalleryTheme().getCropControlColor(), GalleryFinal.getFunctionConfig().isCropCircle());
             final int width = rotateBitmap.getWidth();
             final int height = rotateBitmap.getHeight();
 
@@ -269,9 +268,10 @@ public abstract class CropImageActivity extends MonitoredActivity {
 
     /**
      * 保存裁剪图片
+     *
      * @param saveFile
      */
-    public void onSaveClicked( File saveFile) {
+    public void onSaveClicked(File saveFile) {
         if (cropView == null || isSaving) {
             return;
         }
@@ -389,7 +389,7 @@ public abstract class CropImageActivity extends MonitoredActivity {
                 if (outputStream != null) {
                     String ext = FilenameUtils.getExtension(saveFile.getAbsolutePath());
                     Bitmap.CompressFormat format;
-                    if ( ext.equalsIgnoreCase("jpg") || ext.equalsIgnoreCase("jpeg") ) {
+                    if (ext.equalsIgnoreCase("jpg") || ext.equalsIgnoreCase("jpeg")) {
                         format = Bitmap.CompressFormat.JPEG;
                         croppedImage.compress(format, 90, outputStream);
                     } else {

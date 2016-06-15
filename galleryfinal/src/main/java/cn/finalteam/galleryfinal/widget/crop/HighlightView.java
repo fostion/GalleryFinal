@@ -40,19 +40,20 @@ import cn.finalteam.galleryfinal.R;
  */
 class HighlightView {
 
-    public static final int GROW_NONE        = (1 << 0);
-    public static final int GROW_LEFT_EDGE   = (1 << 1);
-    public static final int GROW_RIGHT_EDGE  = (1 << 2);
-    public static final int GROW_TOP_EDGE    = (1 << 3);
+    public static final int GROW_NONE = (1 << 0);
+    public static final int GROW_LEFT_EDGE = (1 << 1);
+    public static final int GROW_RIGHT_EDGE = (1 << 2);
+    public static final int GROW_TOP_EDGE = (1 << 3);
     public static final int GROW_BOTTOM_EDGE = (1 << 4);
-    public static final int MOVE             = (1 << 5);
+    public static final int MOVE = (1 << 5);
 
     private static final int DEFAULT_HIGHLIGHT_COLOR = 0xFF33B5E5;
     private static final float HANDLE_RADIUS_DP = 12f;
     private static final float OUTLINE_DP = 2f;
 
-    enum ModifyMode { None, Move, Grow }
-    enum HandleMode { Changing, Always, Never }
+    enum ModifyMode {None, Move, Grow}
+
+    enum HandleMode {Changing, Always, Never}
 
     RectF cropRect; // Image space
     Rect drawRect; // Screen space
@@ -76,26 +77,30 @@ class HighlightView {
     private float outlineWidth;
     private boolean isFocused;
 
-    public HighlightView(View view, int highlightColor) {
+    public HighlightView(View view, int highlightColor,boolean isCircle) {
         viewContext = view;
         initStyles(highlightColor);
+        if(isCircle){
+            showCircle = true;
+            showThirds = false;
+        } else {
+            showCircle = false;
+            showThirds = true;
+        }
     }
 
     private void initStyles(int highlightColor) {
-        //todo 需要修正
-        this.showThirds = true;
-        this.showCircle = false;
         this.handleMode = HandleMode.Always;
         this.highlightColor = highlightColor;
         //TypedValue outValue = new TypedValue();
         //context.getTheme().resolveAttribute(R.attr.cropImageStyle, outValue, true);
         //TypedArray attributes = context.obtainStyledAttributes(outValue.resourceId, R.styleable.CropImageView);
         //try {
-            //showThirds = attributes.getBoolean(R.styleable.CropImageView_showThirds, false);
+        //showThirds = attributes.getBoolean(R.styleable.CropImageView_showThirds, false);
         //showCircle = attributes.getBoolean(R.styleable.CropImageView_showCircle, false);
-            //highlightColor = attributes.getColor(R.styleable.CropImageView_highlightColor,
-            //        DEFAULT_HIGHLIGHT_COLOR);
-            //handleMode = HandleMode.values()[attributes.getInt(R.styleable.CropImageView_showHandles, 0)];
+        //highlightColor = attributes.getColor(R.styleable.CropImageView_highlightColor,
+        //        DEFAULT_HIGHLIGHT_COLOR);
+        //handleMode = HandleMode.values()[attributes.getInt(R.styleable.CropImageView_showHandles, 0)];
         //} finally {
         //    attributes.recycle();
         //}
@@ -130,7 +135,8 @@ class HighlightView {
 
     protected void draw(Canvas canvas) {
         canvas.save();
-        Path path = new Path();
+        Path thirdPath = new Path();
+        Path circlePath = new Path();
         outlinePaint.setStrokeWidth(outlineWidth);
         if (!hasFocus()) {
             outlinePaint.setColor(Color.BLACK);
@@ -139,14 +145,20 @@ class HighlightView {
             Rect viewDrawingRect = new Rect();
             viewContext.getDrawingRect(viewDrawingRect);
 
-            path.addRect(new RectF(drawRect), Path.Direction.CW);
-            //todo 需要修正
-//            path.addCircle((drawRect.right+drawRect.left)/2,(drawRect.bottom+drawRect.top)/2,(drawRect.bottom-drawRect.top)/2,Path.Direction.CW);
+            //透明边框
+            //四边形
+            thirdPath.addRect(new RectF(drawRect), Path.Direction.CW);
+            circlePath.addCircle((drawRect.right + drawRect.left) / 2, (drawRect.bottom + drawRect.top) / 2, (drawRect.bottom - drawRect.top) / 2, Path.Direction.CW);
             outlinePaint.setColor(highlightColor);
 
             if (isClipPathSupported(canvas)) {
                 //模糊区域绘制
-                canvas.clipPath(path, Region.Op.DIFFERENCE);
+                if (showThirds) {
+                    canvas.clipPath(thirdPath, Region.Op.DIFFERENCE);
+                } else if (showCircle) {
+                    canvas.clipPath(circlePath, Region.Op.DIFFERENCE);
+
+                }
                 canvas.drawRect(viewDrawingRect, outsidePaint);
             } else {
                 drawOutsideFallback(canvas);
@@ -154,7 +166,10 @@ class HighlightView {
 
             //画四个边栏
             canvas.restore();
-            canvas.drawPath(path, outlinePaint);
+            if (showCircle) {
+                canvas.drawPath(circlePath, outlinePaint);
+            }
+            canvas.drawPath(thirdPath, outlinePaint);
 
             if (showThirds) {
                 drawThirds(canvas);
@@ -191,7 +206,7 @@ class HighlightView {
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN_MR1) {
             return false;
         } else if ((Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-            || Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                || Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
             return true;
         } else {
             return !canvas.isHardwareAccelerated();
@@ -199,7 +214,7 @@ class HighlightView {
     }
 
     private void drawHandles(Canvas canvas) {
-        int xMiddle = drawRect.left + ((drawRect.right  - drawRect.left) / 2);
+        int xMiddle = drawRect.left + ((drawRect.right - drawRect.left) / 2);
         int yMiddle = drawRect.top + ((drawRect.bottom - drawRect.top) / 2);
 
         //四个控制点
@@ -213,7 +228,7 @@ class HighlightView {
         outlinePaint.setStrokeWidth(1);
         float xThird = (drawRect.right - drawRect.left) / 3;
         float yThird = (drawRect.bottom - drawRect.top) / 3;
-        
+
         canvas.drawLine(drawRect.left + xThird, drawRect.top,
                 drawRect.left + xThird, drawRect.bottom, outlinePaint);
         canvas.drawLine(drawRect.left + xThird * 2, drawRect.top,
@@ -250,16 +265,16 @@ class HighlightView {
                 && (x < r.right + hysteresis);
 
         // Check whether the position is near some edge(s)
-        if ((Math.abs(r.left - x)     < hysteresis)  &&  verticalCheck) {
+        if ((Math.abs(r.left - x) < hysteresis) && verticalCheck) {
             retval |= GROW_LEFT_EDGE;
         }
-        if ((Math.abs(r.right - x)    < hysteresis)  &&  verticalCheck) {
+        if ((Math.abs(r.right - x) < hysteresis) && verticalCheck) {
             retval |= GROW_RIGHT_EDGE;
         }
-        if ((Math.abs(r.top - y)      < hysteresis)  &&  horizCheck) {
+        if ((Math.abs(r.top - y) < hysteresis) && horizCheck) {
             retval |= GROW_TOP_EDGE;
         }
-        if ((Math.abs(r.bottom - y)   < hysteresis)  &&  horizCheck) {
+        if ((Math.abs(r.bottom - y) < hysteresis) && horizCheck) {
             retval |= GROW_BOTTOM_EDGE;
         }
 
@@ -277,7 +292,7 @@ class HighlightView {
         if (edge == MOVE) {
             // Convert to image space before sending to moveBy()
             moveBy(dx * (cropRect.width() / r.width()),
-                   dy * (cropRect.height() / r.height()));
+                    dy * (cropRect.height() / r.height()));
         } else {
             if (((GROW_LEFT_EDGE | GROW_RIGHT_EDGE) & edge) == 0) {
                 dx = 0;
@@ -304,10 +319,10 @@ class HighlightView {
         // Put the cropping rectangle inside image rectangle
         cropRect.offset(
                 Math.max(0, imageRect.left - cropRect.left),
-                Math.max(0, imageRect.top  - cropRect.top));
+                Math.max(0, imageRect.top - cropRect.top));
 
         cropRect.offset(
-                Math.min(0, imageRect.right  - cropRect.right),
+                Math.min(0, imageRect.right - cropRect.right),
                 Math.min(0, imageRect.bottom - cropRect.bottom));
 
         drawRect = computeLayout();
@@ -383,10 +398,10 @@ class HighlightView {
     // Maps the cropping rectangle from image space to screen space
     private Rect computeLayout() {
         RectF r = new RectF(cropRect.left, cropRect.top,
-                            cropRect.right, cropRect.bottom);
+                cropRect.right, cropRect.bottom);
         matrix.mapRect(r);
         return new Rect(Math.round(r.left), Math.round(r.top),
-                        Math.round(r.right), Math.round(r.bottom));
+                Math.round(r.right), Math.round(r.bottom));
     }
 
     public void invalidate() {

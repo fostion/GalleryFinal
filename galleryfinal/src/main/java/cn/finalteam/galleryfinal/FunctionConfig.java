@@ -20,7 +20,6 @@ import android.support.annotation.IntRange;
 
 import cn.finalteam.galleryfinal.model.PhotoInfo;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -29,8 +28,7 @@ import java.util.Collection;
  * Author:pengjianbo
  * Date:15/12/2 上午10:45
  */
-public class FunctionConfig implements Cloneable{
-
+public class FunctionConfig implements Cloneable {
     protected boolean mutiSelect;
     protected int maxSize;
     protected boolean editPhoto;//编辑
@@ -45,6 +43,8 @@ public class FunctionConfig implements Cloneable{
     private boolean forceCrop;//强制裁剪
     private boolean forceCropEdit;//强制裁剪后是否可对图片编辑，默认不可以
     private boolean preview;//预览
+    //todo 图像
+    private boolean cropCircle; //是否圆形头像
     private ArrayList<String> selectedList;
     private ArrayList<String> filterList;//过滤器
 
@@ -58,6 +58,7 @@ public class FunctionConfig implements Cloneable{
         this.cropWidth = builder.cropWidth;
         this.cropHeight = builder.cropHeight;
         this.cropSquare = builder.cropSquare;
+        this.cropCircle = builder.cropCircle;
         this.selectedList = builder.selectedList;
         this.filterList = builder.filterList;
         this.rotateReplaceSource = builder.rotateReplaceSource;
@@ -84,11 +85,14 @@ public class FunctionConfig implements Cloneable{
         private boolean forceCrop;//强制裁剪
         private boolean forceCropEdit;//强制裁剪后是否可对图片编辑，默认不可以
         private boolean preview;//预览
+        //todo 图像
+        private boolean cropCircle; // 头像是否圆形
 
         protected Builder setMutiSelect(boolean mutiSelect) {
             this.mutiSelect = mutiSelect;
             return this;
         }
+
 
         public Builder setMutiSelectMaxSize(@IntRange(from = 1, to = Integer.MAX_VALUE) int maxSize) {
             this.maxSize = maxSize;
@@ -115,18 +119,23 @@ public class FunctionConfig implements Cloneable{
             return this;
         }
 
-        public Builder setCropWidth(@IntRange(from = 1, to = Integer.MAX_VALUE)int width) {
+        public Builder setCropWidth(@IntRange(from = 1, to = Integer.MAX_VALUE) int width) {
             this.cropWidth = width;
             return this;
         }
 
-        public Builder setCropHeight(@IntRange(from = 1, to = Integer.MAX_VALUE)int height) {
+        public Builder setCropHeight(@IntRange(from = 1, to = Integer.MAX_VALUE) int height) {
             this.cropHeight = height;
             return this;
         }
 
         public Builder setCropSquare(boolean enable) {
             this.cropSquare = enable;
+            return this;
+        }
+
+        public Builder setCropCircle(boolean enable) {
+            this.cropCircle = enable;
             return this;
         }
 
@@ -138,9 +147,9 @@ public class FunctionConfig implements Cloneable{
         }
 
         public Builder setSelected(Collection<PhotoInfo> selectedList) {
-            if ( selectedList != null ) {
+            if (selectedList != null) {
                 ArrayList<String> list = new ArrayList<>();
-                for(PhotoInfo info:selectedList) {
+                for (PhotoInfo info : selectedList) {
                     if (info != null) {
                         list.add(info.getPhotoPath());
                     }
@@ -152,16 +161,16 @@ public class FunctionConfig implements Cloneable{
         }
 
         public Builder setFilter(ArrayList<String> filterList) {
-            if ( filterList != null ) {
+            if (filterList != null) {
                 this.filterList = (ArrayList<String>) filterList.clone();
             }
             return this;
         }
 
         public Builder setFilter(Collection<PhotoInfo> filterList) {
-            if ( filterList != null ) {
+            if (filterList != null) {
                 ArrayList<String> list = new ArrayList<>();
-                for(PhotoInfo info:filterList) {
+                for (PhotoInfo info : filterList) {
                     if (info != null) {
                         list.add(info.getPhotoPath());
                     }
@@ -174,6 +183,7 @@ public class FunctionConfig implements Cloneable{
 
         /**
          * 设置旋转后是否替换原图
+         *
          * @param rotateReplaceSource
          * @return
          */
@@ -184,6 +194,7 @@ public class FunctionConfig implements Cloneable{
 
         /**
          * 设置裁剪后是否替换原图
+         *
          * @param cropReplaceSource
          * @return
          */
@@ -194,6 +205,7 @@ public class FunctionConfig implements Cloneable{
 
         /**
          * 强制裁剪
+         *
          * @param forceCrop
          * @return
          */
@@ -204,6 +216,7 @@ public class FunctionConfig implements Cloneable{
 
         /**
          * 强制裁剪后是否可以对图片编辑，默认不可编辑
+         *
          * @param forceCropEdit
          * @return
          */
@@ -214,6 +227,7 @@ public class FunctionConfig implements Cloneable{
 
         /**
          * 是否开启预览功能
+         *
          * @param preview
          * @return
          */
@@ -230,6 +244,7 @@ public class FunctionConfig implements Cloneable{
     public boolean isMutiSelect() {
         return mutiSelect;
     }
+
 
     public int getMaxSize() {
         return maxSize;
@@ -263,6 +278,10 @@ public class FunctionConfig implements Cloneable{
         return cropSquare;
     }
 
+    public boolean isCropCircle() {
+        return cropCircle;
+    }
+
     public boolean isRotateReplaceSource() {
         return rotateReplaceSource;
     }
@@ -287,7 +306,7 @@ public class FunctionConfig implements Cloneable{
         return filterList;
     }
 
-    public boolean isEnablePreview(){
+    public boolean isEnablePreview() {
         return preview;
     }
 
