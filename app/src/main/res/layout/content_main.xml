@@ -317,11 +317,22 @@
                 android:textSize="12sp" />
 
             <CheckBox
+                android:id="@+id/cb_crop_card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:checked="false"
+                android:text="裁剪卡片（Crop Card）"
+                android:textSize="12sp" />
+
+            <CheckBox
                 android:id="@+id/cb_crop_square"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:checked="true"
+                android:layout_gravity="center_vertical"
                 android:text="裁剪正方形（Crop Square）"
                 android:textSize="12sp" />
 

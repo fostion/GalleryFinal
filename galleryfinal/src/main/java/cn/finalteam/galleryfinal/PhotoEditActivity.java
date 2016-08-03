@@ -257,8 +257,14 @@ public class PhotoEditActivity extends CropImageActivity implements AdapterView.
                 mLlGallery.setVisibility(View.GONE);
             }
 
-            initCrop(mIvCropPhoto, GalleryFinal.getFunctionConfig().isCropSquare(),
-                    GalleryFinal.getFunctionConfig().getCropWidth(), GalleryFinal.getFunctionConfig().getCropHeight());
+            //裁剪成正方形
+            CropEnum cropEnum = CropEnum.normal;
+            if(GalleryFinal.getFunctionConfig().isCropSquare())  cropEnum = CropEnum.square; //裁剪成正方形
+            if(GalleryFinal.getFunctionConfig().isCropCard())  cropEnum = CropEnum.card; //裁剪成卡片
+            initCrop(mIvCropPhoto, cropEnum, GalleryFinal.getFunctionConfig().getCropWidth(), GalleryFinal.getFunctionConfig().getCropHeight());
+
+
+
             if (mPhotoList.size() > 0 && !mTakePhotoAction) {
                 loadImage(mPhotoList.get(0));
             }

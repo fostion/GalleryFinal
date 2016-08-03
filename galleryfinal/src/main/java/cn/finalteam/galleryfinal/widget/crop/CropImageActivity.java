@@ -47,9 +47,14 @@ import java.util.concurrent.CountDownLatch;
  */
 public abstract class CropImageActivity extends MonitoredActivity {
 
+    public enum CropEnum {
+        normal, //正常情况
+        square, //裁剪成正方形
+        card    //裁剪成名片格式
+    }
+
     private static final int SIZE_DEFAULT = 2048;
     private static final int SIZE_LIMIT = 4096;
-
     private final Handler handler = new Handler();
 
     private int aspectX;
@@ -85,11 +90,15 @@ public abstract class CropImageActivity extends MonitoredActivity {
         }
     }
 
-    public void initCrop(CropImageView imageView, boolean square, int maxX, int maxY) {
-        if (square) {
+    public void initCrop(CropImageView imageView, CropEnum cropEnum, int maxX, int maxY) {
+        if (cropEnum == CropEnum.square) {
             this.aspectX = 1;
             this.aspectY = 1;
+        } else if (cropEnum == CropEnum.card) {
+            this.aspectX = 16;
+            this.aspectY = 12;
         }
+
         this.maxX = maxX;
         this.maxY = maxY;
         this.imageView = imageView;

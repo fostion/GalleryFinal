@@ -38,6 +38,7 @@ public class FunctionConfig implements Cloneable {
     private int cropWidth;
     private int cropHeight;
     private boolean cropSquare;
+    private boolean cropCard;
     private boolean rotateReplaceSource;//旋转是否覆盖源文件
     private boolean cropReplaceSource;//裁剪是否覆盖源文件
     private boolean forceCrop;//强制裁剪
@@ -58,6 +59,7 @@ public class FunctionConfig implements Cloneable {
         this.cropWidth = builder.cropWidth;
         this.cropHeight = builder.cropHeight;
         this.cropSquare = builder.cropSquare;
+        this.cropCard = builder.cropCard;
         this.cropCircle = builder.cropCircle;
         this.selectedList = builder.selectedList;
         this.filterList = builder.filterList;
@@ -78,6 +80,7 @@ public class FunctionConfig implements Cloneable {
         private int cropWidth;
         private int cropHeight;
         private boolean cropSquare;
+        private boolean cropCard;
         private boolean rotateReplaceSource;//旋转是否覆盖源文件
         private boolean cropReplaceSource;//裁剪是否覆盖源文件
         private ArrayList<String> selectedList;
@@ -131,6 +134,11 @@ public class FunctionConfig implements Cloneable {
 
         public Builder setCropSquare(boolean enable) {
             this.cropSquare = enable;
+            return this;
+        }
+
+        public Builder setCropCard(boolean enable) {
+            this.cropCard = enable;
             return this;
         }
 
@@ -276,6 +284,10 @@ public class FunctionConfig implements Cloneable {
 
     public boolean isCropSquare() {
         return cropSquare;
+    }
+
+    public boolean isCropCard() {
+        return cropCard;
     }
 
     public boolean isCropCircle() {

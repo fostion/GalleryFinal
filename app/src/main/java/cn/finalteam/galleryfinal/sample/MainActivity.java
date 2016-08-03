@@ -98,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout mLlCropSize;
     @Bind(R.id.cb_crop_square)
     CheckBox mCbCropSquare;
+    @Bind(R.id.cb_crop_card)
+    CheckBox mCbCropCard;
     @Bind(R.id.rb_theme_default)
     RadioButton mRbThemeDefault;
     @Bind(R.id.rb_theme_dark)
@@ -211,6 +213,26 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mCbCropSquare.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    mCbCropCard.setChecked(false);
+                }
+            }
+        });
+
+        mCbCropCard.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    mCbCropSquare.setChecked(false);
+                }
+            }
+        });
+
+
         mOpenGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -307,8 +329,17 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     if (mCbCropSquare.isChecked()) {
+                        //裁剪成正方形
                         functionConfigBuilder.setCropSquare(true);
+                        functionConfigBuilder.setCropCard(false);
                     }
+
+                    if(mCbCropCard.isChecked()){
+                        //裁剪成卡片
+                        functionConfigBuilder.setCropSquare(false);
+                        functionConfigBuilder.setCropCard(true);
+                    }
+
                     if (mCbCropReplaceSource.isChecked()) {
                         functionConfigBuilder.setCropReplaceSource(true);
                     }
@@ -319,6 +350,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+
+
 
                 if (mCbShowCamera.isChecked()) {
                     functionConfigBuilder.setEnableCamera(true);
